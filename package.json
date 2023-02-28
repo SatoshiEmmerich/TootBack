@@ -1,0 +1,25 @@
+{
+  "name": "tootback_batch",
+  "type": "module",
+  "main": "public/js/index.js",
+  "scripts": {
+    "build": "cp ./src/config/config.json ./public/ -f;yarn run tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:watch": "cp ./src/config/config.json ./public/ -f;yarn run tsc -watch"
+  },
+  "packageManager": "yarn@4.0.0-rc.39",
+  "volta": {
+    "node": "18.14.2",
+    "npm": "9.5.1",
+    "yarn": "4.0.0-rc.39"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "masto": "^5.10.0",
+    "moment": "^2.29.4",
+    "string-strip-html": "^13.2.0"
+  }
+}
