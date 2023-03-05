@@ -24,8 +24,8 @@ export function log(level: string, msg: string | object) {
       );
     }
   } else {
-    const sever = (l1: string) => {
-      switch (l1) {
+    const sever = (lchar: string) => {
+      switch (lchar) {
         case 'I':
           return 'INFO';
         case 'W':
