@@ -1,8 +1,4 @@
 {
-  "$defaultFetchInterval": "取得インターバルを計算できなかった場合のデフォルト値",
-  "defaultFetchInterval": 60000,
-  "$minFetchInterval": "最低の取得インターバル。これ以下の間隔での取得は行われない。",
-  "minFetchInterval": 15000,
   "$maxFetchCount": "一度に取得するトゥート件数。API仕様により定められている",
   "maxFetchCount": 40,
   "$instances": "対象インスタンスのURL",
