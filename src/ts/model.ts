@@ -10,8 +10,7 @@ const registerStatus = (toots: Toot[], datasetId: string, tableId: string) => {
     .table(tableId)
     .insert(toots)
     .then(response => {
-      // bigqueryClient.query()
-      log('I', JSON.stringify(response, null, '  '));
+      bigqueryClient.query('CALL tbds.register_bigram();');
     })
     .catch(reason => {
       log('E', JSON.stringify(reason, null, '  '));
