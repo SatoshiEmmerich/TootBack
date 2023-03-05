@@ -10,11 +10,11 @@ const registerStatus = (toots: Toot[], datasetId: string, tableId: string) => {
     .dataset(datasetId)
     .table(tableId)
     .insert(toots)
-    .then(response => log('I', response))
-    .catch(reason => log('E', reason))
+    .then(response => log('I', { msg: 'insert response', response: response }))
+    .catch(response => log('E', { msg: 'insert error', response: response }))
     .then(_response => bigqueryClient.query('CALL tbds.register_bigram();'))
-    .then(response => log('I', response))
-    .catch(reason => log('E', reason));
+    .then(response => log('I', { msg: 'register_bigram response', response: response }))
+    .catch(response => log('E', { msg: 'register_bigram error', response: response }));
 };
 
 interface Toot {

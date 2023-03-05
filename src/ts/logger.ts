@@ -17,8 +17,7 @@ export function log(level: string, msg: string | object) {
       );
     } else {
       return Promise.all(
-        msg
-          .toString()
+        JSON.stringify(msg, null, '  ')
           .split(/[\r\n]+/g)
           .map(l => fs.appendFile('./batch.log', `${moment().format()} [${lvl}] ${l}\n`))
       );
