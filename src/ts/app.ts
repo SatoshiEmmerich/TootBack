@@ -48,9 +48,7 @@ const appMain = (confFile: string) =>
               return selected.map(s => statusToToot(s, instance.name));
             })
         )
-      ).then(toots => {
-        model.registerStatus(toots.flat(), config.bigquery.datasetId, config.bigquery.tableId);
-      });
+      ).then(toots => model.registerStatus(toots.flat(), config.bigquery.datasetId, config.bigquery.tableId));
     })
     .catch(e => log('E', e));
 

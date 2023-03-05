@@ -15,7 +15,7 @@ const registerStatus = (toots: Toot[], datasetId: string, tableId: string) => {
       bigqueryClient.query('CALL tbds.register_bigram();');
     })
     .catch(reason => {
-      log('E', JSON.stringify(reason, null, '  '));
+      log('E', reason);
     });
 };
 

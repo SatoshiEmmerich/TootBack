@@ -1,3 +1,3 @@
 import { appMain } from './app.js';
 
-appMain(process.argv[2]);
+await appMain(process.argv[2]);
