@@ -10,12 +10,16 @@ export function log(level: string, msg: string | object) {
   const lvl = level.substring(0, 1).toUpperCase();
   if (process.env.TOOTBACK_IS_LOCAL) {
     if (typeof msg == 'string') {
-      msg.split(/[\r\n]+/g).forEach(l => fs.appendFile('./batch.log', `${moment().format()} [${lvl}] ${l}\n`));
+      return Promise.all(
+        msg.split(/[\r\n]+/g).map(l => fs.appendFile('./batch.log', `${moment().format()} [${lvl}] ${l}\n`))
+      );
     } else {
-      msg
-        .toString()
-        .split(/[\r\n]+/g)
-        .forEach(l => fs.appendFile('./batch.log', `${moment().format()} [${lvl}] ${l}\n`));
+      return Promise.all(
+        msg
+          .toString()
+          .split(/[\r\n]+/g)
+          .map(l => fs.appendFile('./batch.log', `${moment().format()} [${lvl}] ${l}\n`))
+      );
     }
   } else {
     const sever = (l1: string) => {
@@ -37,6 +41,6 @@ export function log(level: string, msg: string | object) {
       severity: sever(lvl),
       labels: { label: 'batchLog' },
     };
-    glog.write(glog.entry(metadata, msg));
+    return glog.write(glog.entry(metadata, msg));
   }
 }
