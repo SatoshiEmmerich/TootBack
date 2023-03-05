@@ -10,7 +10,7 @@ const registerStatus = (toots: Toot[], datasetId: string, tableId: string) => {
     .dataset(datasetId)
     .table(tableId)
     .insert(toots)
-    .then(response => {
+    .then(_response => {
       // toots_bi-gram を更新する
       bigqueryClient.query('CALL tbds.register_bigram();');
     })
