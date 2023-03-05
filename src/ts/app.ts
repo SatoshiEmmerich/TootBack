@@ -14,7 +14,7 @@ const statusToString = (s: Status, instance: string) =>
     `[${(instance + ' '.repeat(8)).substring(0, 8)}]`,
     moment(s.createdAt).format('hh:mm:ss'),
     s.account.displayName,
-    stripHtml(s.content).result.substring(0, 15),
+    stripHtml(s.content).result.substring(0, 20),
   ].join(' ');
 
 const statusToToot = (s: Status, instance: string) =>
