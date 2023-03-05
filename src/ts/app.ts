@@ -13,7 +13,6 @@ const statusToString = (s: Status, instance: string) =>
   [
     `[${(instance + ' '.repeat(8)).substring(0, 8)}]`,
     moment(s.createdAt).format('hh:mm:ss'),
-    // s.id,
     s.account.displayName,
     stripHtml(s.content).result.substring(0, 15),
   ].join(' ');
