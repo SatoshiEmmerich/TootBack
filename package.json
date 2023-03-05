@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@google-cloud/bigquery": "^6.1.0",
+    "@google-cloud/logging": "^10.4.0",
     "fs": "^0.0.1-security",
     "masto": "^5.10.0",
     "moment": "^2.29.4",
