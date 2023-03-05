@@ -49,6 +49,7 @@ const appMain = (confFile: string) =>
         )
       ).then(toots => model.registerStatus(toots.flat(), config.bigquery.datasetId, config.bigquery.tableId));
     })
+    .then(() => log('I', 'tootback_batch finish.'))
     .catch(e => log('E', e));
 
 export { appMain };
