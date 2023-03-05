@@ -15,5 +15,9 @@
       "url": "https://pawoo.net/",
       "name": "Pawoo"
     }
-  ]
+  ],
+  "bigquery": {
+    "datasetId": "tbds",
+    "tableId": "toots_load"
+  }
 }
