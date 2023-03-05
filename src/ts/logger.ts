@@ -1,6 +1,7 @@
 import moment from 'moment';
 import * as fs from 'fs/promises';
 import { Logging } from '@google-cloud/logging';
+import { LogEntry } from '@google-cloud/logging/build/src/entry';
 
 // Creates a client
 const glog = new Logging({ projectId: 'tootback' }).log('tootback_batch');
@@ -30,10 +31,11 @@ export function log(level: string, msg: string | object) {
       }
     };
     // The metadata associated with the entry
-    const metadata = {
+    const metadata = <LogEntry>{
       resource: { type: 'global' },
       // See: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#logseverity
       severity: sever(lvl),
+      labels: { label: 'batchLog' },
     };
     glog.write(glog.entry(metadata, msg));
   }
