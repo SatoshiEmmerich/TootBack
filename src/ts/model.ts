@@ -5,6 +5,7 @@ import { log } from './logger.js';
 
 const registerStatus = (toots: Toot[], datasetId: string, tableId: string) => {
   const bigqueryClient = new BigQuery();
+  log('I', `register ${toots.length} toots.`);
   return bigqueryClient
     .dataset(datasetId)
     .table(tableId)
