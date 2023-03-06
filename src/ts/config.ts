@@ -6,7 +6,6 @@ export interface InstanceConfig {
 }
 interface BigqueryConfig {
   datasetId: string;
-  tableId: string;
 }
 /** 設定情報 */
 export interface Config {

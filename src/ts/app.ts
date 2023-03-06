@@ -21,7 +21,7 @@ const statusToToot = (s: Status, instance: string) =>
   <model.Toot>{
     instance: instance,
     id: Number.parseInt(s.id),
-    created_at: moment(s.createdAt).utc().format('YYYY-MM-DD hh:mm:ss.SSS UTC'),
+    created_at: moment(s.createdAt).utc().format('YYYY-MM-DD HH:mm:ss.SSS UTC'),
     content: stripHtml(s.content).result,
     status_json: JSON.stringify(s),
   };
@@ -31,23 +31,30 @@ const appMain = (confFile: string) =>
     .readFile(confFile)
     .then(configBuffer => {
       const config = JSON.parse(configBuffer.toString()) as Config;
-      return Promise.all(
-        config.instances.map(instance =>
-          login({ url: instance.url })
-            .then(client =>
-              client.v1.timelines.listPublic({
-                local: true,
-                limit: config.maxFetchCount,
-              })
+      const datasetId = config.bigquery.datasetId;
+      return model
+        .getMaxLoadedIds(datasetId)
+        .then(maxIds =>
+          Promise.all(
+            config.instances.map(instance =>
+              login({ url: instance.url })
+                .then(client =>
+                  client.v1.timelines.listPublic({
+                    local: true,
+                    limit: config.maxFetchCount,
+                    sinceId: maxIds.find(mi => mi.instance == instance.name)?.id?.toString(),
+                  })
+                )
+                .then(selected => {
+                  if (process.env.TOOTBACK_IS_LOCAL) {
+                    selected.forEach(s => log('D', statusToString(s, instance.name)));
+                  }
+                  return selected.map(s => statusToToot(s, instance.name));
+                })
             )
-            .then(selected => {
-              if (process.env.TOOTBACK_IS_LOCAL) {
-                selected.forEach(s => log('I', statusToString(s, instance.name)));
-              }
-              return selected.map(s => statusToToot(s, instance.name));
-            })
+          )
         )
-      ).then(toots => model.registerStatus(toots.flat(), config.bigquery.datasetId, config.bigquery.tableId));
+        .then(toots => model.registerStatus(toots.flat(), datasetId));
     })
     .then(() => log('I', 'tootback_batch finish.'))
     .catch(e => log('E', e));

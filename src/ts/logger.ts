@@ -25,6 +25,8 @@ export function log(level: string, msg: string | object) {
   } else {
     const sever = (lchar: string) => {
       switch (lchar) {
+        case 'D':
+          return 'DEBUG';
         case 'I':
           return 'INFO';
         case 'W':

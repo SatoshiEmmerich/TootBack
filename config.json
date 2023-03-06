@@ -13,7 +13,6 @@
     }
   ],
   "bigquery": {
-    "datasetId": "tbds",
-    "tableId": "toots_load"
+    "datasetId": "tbds"
   }
 }
