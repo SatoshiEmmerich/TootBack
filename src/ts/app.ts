@@ -21,7 +21,7 @@ const statusToToot = (s: Status, instance: string) =>
   <model.Toot>{
     instance: instance,
     id: Number.parseInt(s.id),
-    created_at: moment(s.createdAt).format('YYYY-MM-DD hh:mm:ss.SSS'),
+    created_at: moment(s.createdAt).utc().format('YYYY-MM-DD hh:mm:ss.SSS UTC'),
     content: stripHtml(s.content).result,
     status_json: JSON.stringify(s),
   };
