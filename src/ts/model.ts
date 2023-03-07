@@ -41,4 +41,5 @@ interface Toot {
   content: string;
   status_json: string;
 }
+
 export { MaxIds, getMaxLoadedIds, Toot, registerStatus };
