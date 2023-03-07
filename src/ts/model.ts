@@ -16,6 +16,7 @@ FROM tootback.tbds.toots_bigram
 WHERE TIMESTAMP_SUB(current_timestamp(), INTERVAL 5 MINUTE) < created_at
 GROUP BY instance
   `;
+
   return new BigQuery().query({ query: query }).then(response => response[0]?.map(d => d as MaxIds));
 };
 
