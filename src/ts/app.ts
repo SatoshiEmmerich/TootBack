@@ -4,8 +4,7 @@ import moment from 'moment';
 import * as fs from 'fs/promises';
 import * as model from './model.js';
 import { Config } from './config.js';
-import { log } from './logger.js';
-log('I', 'tootback_batch start.');
+import { logger } from './logger.js';
 
 type Status = mastodon.v1.Status;
 
@@ -47,7 +46,7 @@ const appMain = (confFile: string) =>
                 )
                 .then(selected => {
                   if (process.env.TOOTBACK_IS_LOCAL) {
-                    selected.forEach(s => log('D', statusToString(s, instance.name)));
+                    selected.forEach(s => logger.debug(statusToString(s, instance.name)));
                   }
                   return selected.map(s => statusToToot(s, instance.name));
                 })
@@ -56,7 +55,7 @@ const appMain = (confFile: string) =>
         )
         .then(toots => model.registerStatus(toots.flat(), datasetId));
     })
-    .then(() => log('I', 'tootback_batch finish.'))
-    .catch(e => log('E', e));
+    .then(() => logger.info('tootback_batch finish.'))
+    .catch(e => logger.error(e));
 
 export { appMain };

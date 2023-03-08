@@ -1,5 +1,5 @@
 import { BigQuery } from '@google-cloud/bigquery';
-import { log } from './logger.js';
+import { logger } from './logger.js';
 
 const toots_load = 'toots_load';
 
@@ -22,16 +22,16 @@ GROUP BY instance
 
 const registerStatus = (toots: Toot[], datasetId: string) => {
   const bigqueryClient = new BigQuery();
-  log('I', `register ${toots.length} toots.`);
+  logger.info(`register ${toots.length} toots.`);
   return bigqueryClient
     .dataset(datasetId)
     .table(toots_load)
     .insert(toots)
-    .then(response => log('I', { msg: 'insert response', response: response }))
-    .catch(response => log('E', { msg: 'insert error', response: response }))
+    .then(response => logger.info({ msg: 'insert response', response: response }))
+    .catch(response => logger.error({ msg: 'insert error', response: response }))
     .then(_response => bigqueryClient.query('CALL tbds.register_bigram();'))
-    .then(response => log('I', { msg: 'register_bigram response', response: response }))
-    .catch(response => log('E', { msg: 'register_bigram error', response: response }));
+    .then(response => logger.info({ msg: 'register_bigram response', response: response }))
+    .catch(response => logger.error({ msg: 'register_bigram error', response: response }));
 };
 
 interface Toot {
