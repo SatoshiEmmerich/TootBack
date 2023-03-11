@@ -2,7 +2,7 @@
   "$maxFetchCount": "一度に取得するトゥート件数。API仕様により定められている",
   "maxFetchCount": 40,
   "$runIntervalMinutes": "このコンテナが実行される頻度",
-  "runIntervalMinutes": 7,
+  "runIntervalMinutes": 10,
   "$instances": "対象インスタンスのURLと名前",
   "instances": [
     {
