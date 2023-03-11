@@ -31,7 +31,7 @@ const fetchToots = async (client: mastodon.Client, instanceName: string, config:
   const toots: model.Toot[] = [];
   let sinceId = Number.parseInt(firstSinceId ?? '0');
   let found = 11;
-  // 取得のたびに新規トゥートがあると無限ループになるので、少なかったら打ち切り
+  // 取得のたびに新規トゥートがあると無限ループになるので、少なかったら打ち切る
   // 今後APIの一括取得数が増減するかもしれないので、その値ではなく小さく10にしておく
   while (found > 10) {
     logger.debug('start fetching.', { instanceName, sinceId: sinceId });
@@ -51,11 +51,13 @@ const fetchToots = async (client: mastodon.Client, instanceName: string, config:
       });
     found = list.length;
     logger.info('fetched.', { instanceName, found });
-    if (sinceId == list[0].id) {
-      break;
+    if (found > 0) {
+      if (sinceId == list[0].id) {
+        break;
+      }
+      sinceId = list[0].id;
+      list.forEach(item => toots.push(item));
     }
-    sinceId = list[0].id;
-    list.forEach(item => toots.push(item));
   }
   return toots;
 };
