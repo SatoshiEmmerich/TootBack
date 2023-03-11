@@ -19,6 +19,7 @@ GROUP BY instance
 };
 
 const registerStatus = (toots: Toot[]) => {
+  logger.info(`register ${toots.length} toots to toots_load.`, { tootsCount: toots.length });
   const bigqueryClient = new BigQuery();
   return bigqueryClient
     .dataset('tbds')

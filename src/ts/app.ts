@@ -34,7 +34,7 @@ const fetchToots = async (client: mastodon.Client, instanceName: string, config:
   // 取得のたびに新規トゥートがあると無限ループになるので、少なかったら打ち切る
   // 今後APIの一括取得数が増減するかもしれないので、その値ではなく小さく10にしておく
   while (found > 10) {
-    logger.debug('start fetching.', { instanceName, sinceId: sinceId });
+    logger.debug(`start fetching on ${instanceName}`, { instanceName, sinceId: sinceId });
     const list = await sleep(500)
       .then(() =>
         client.v1.timelines.listPublic({
@@ -50,7 +50,7 @@ const fetchToots = async (client: mastodon.Client, instanceName: string, config:
         return selected.map(s => statusToToot(s, instanceName));
       });
     found = list.length;
-    logger.info('fetched.', { instanceName, found });
+    logger.info(`${found} toots has fetched on ${instanceName}.`, { instanceName, found });
     if (found > 0) {
       if (sinceId == list[0].id) {
         break;
