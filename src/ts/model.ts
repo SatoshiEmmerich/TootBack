@@ -27,7 +27,7 @@ const registerStatus = (toots: Toot[]) => {
     .insert(toots)
     .then(response => logger.info('insert response', { response }))
     .catch(response => logger.error('insert error', { response }))
-    .then(_response => bigqueryClient.query('CALL tbds.register_bigram();'))
+    .then(_response => bigqueryClient.query('CALL tbds.REGISTER_BIGRAM();'))
     .then(response => logger.info('register_bigram response', { response }))
     .catch(response => logger.error('register_bigram error', { response }));
 };
