@@ -25,35 +25,59 @@ const statusToToot = (s: Status, instance: string) =>
     status_json: JSON.stringify(s),
   };
 
+const sleep = (ms: number) => new Promise((resolve, _reject) => setTimeout(resolve, ms));
+
+const fetchToots = async (client: mastodon.Client, instanceName: string, config: Config, firstSinceId?: string) => {
+  const toots: model.Toot[] = [];
+  let sinceId = Number.parseInt(firstSinceId ?? '0');
+  let found = 11;
+  // 取得のたびに新規トゥートがあると無限ループになるので、少なかったら打ち切り
+  // 今後APIの一括取得数が増減するかもしれないので、その値ではなく小さく10にしておく
+  while (found > 10) {
+    logger.debug('start fetching.', { instanceName, sinceId: sinceId });
+    const list = await sleep(500)
+      .then(() =>
+        client.v1.timelines.listPublic({
+          local: true,
+          limit: config.maxFetchCount,
+          sinceId: sinceId.toString(),
+        })
+      )
+      .then(selected => {
+        if (process.env.TOOTBACK_IS_LOCAL) {
+          selected.forEach(s => logger.debug(statusToString(s, instanceName)));
+        }
+        return selected.map(s => statusToToot(s, instanceName));
+      });
+    found = list.length;
+    logger.info('fetched.', { instanceName, found });
+    if (sinceId == list[0].id) {
+      break;
+    }
+    sinceId = list[0].id;
+    list.forEach(item => toots.push(item));
+  }
+  return toots;
+};
+
 const appMain = (confFile: string) =>
   fs
     .readFile(confFile)
     .then(configBuffer => {
       const config = JSON.parse(configBuffer.toString()) as Config;
-      const datasetId = config.bigquery.datasetId;
       return model
-        .getMaxLoadedIds(datasetId)
+        .getMaxLoadedIds(config.runIntervalMinutes)
         .then(maxIds =>
           Promise.all(
             config.instances.map(instance =>
-              login({ url: instance.url })
-                .then(client =>
-                  client.v1.timelines.listPublic({
-                    local: true,
-                    limit: config.maxFetchCount,
-                    sinceId: maxIds.find(mi => mi.instance == instance.name)?.id?.toString(),
-                  })
-                )
-                .then(selected => {
-                  if (process.env.TOOTBACK_IS_LOCAL) {
-                    selected.forEach(s => logger.debug(statusToString(s, instance.name)));
-                  }
-                  return selected.map(s => statusToToot(s, instance.name));
-                })
+              login({ url: instance.url }).then(client => {
+                const sinceId = maxIds.find(mi => mi.instance == instance.name)?.id?.toString();
+                return fetchToots(client, instance.name, config, sinceId);
+              })
             )
           )
         )
-        .then(toots => model.registerStatus(toots.flat(), datasetId));
+        .then(toots => model.registerStatus(toots.flat()));
     })
     .then(() => logger.info('tootback_batch finish.'))
     .catch(e => logger.error(e));

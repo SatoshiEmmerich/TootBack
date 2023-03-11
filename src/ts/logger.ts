@@ -24,6 +24,11 @@ const errorReport = winston.format(info => {
   } else if (info.level === 'error') {
     info['@type'] = 'type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent';
   }
+  // required to report logged errors to the Error Reporting console
+  info['serviceContext'] = {
+    service: 'tootback_batch',
+    version: '0.1',
+  };
   return info;
 });
 
